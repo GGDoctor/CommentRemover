@@ -16,13 +16,19 @@ using namespace std;
 enum State {
     ANYTHING, 
     SLASH,
-    SINGLE_LINE, // A comment pertaining '//'
-    MULTIPLE_LINE // A comment pertaining '/* bla */
+    ASTERICK,
+    SINGLE_LINE_COMMENT, // A comment pertaining '//'
+    MULTI_LINE_COMMENT, // A comment pertaining '/* bla */
 };
 
 
 
 int main(int argc, char *argv[]) {
+
+    if (argc != 2 ) {
+        cerr << "Error! There is not a correct number of command line arguments.\n";
+        return 1;
+    }
     string filename = argv[1];
     ifstream inputFile(filename.c_str());
 
@@ -32,10 +38,67 @@ int main(int argc, char *argv[]) {
     }
 
     string line;
+
+
+/*  ************************************************** */
+
+            /* All code in this area needs work */
+
+    State state = ANYTHING;
+
+    //implement the while loop
     while (getline(inputFile, line)) {
-        cout << line << endl; // Outputting the file for us to read 
+        string result = "";
+
+        for (char currentChar : line) { //iterate through each character is line string, one character at a time
+            switch (state) {
+
+            //Handle Anything 
+            case ANYTHING:
+                if (currentChar == '/') {
+                    state = SLASH;
+                } else {
+                    result += currentChar;
+                }
+                break;
+            
+            //Handle Slash
+            case SLASH:
+                if (currentChar == '/') {
+                    state = SINGLE_LINE_COMMENT;
+                } else if (currentChar == '*') {
+                    state = MULTI_LINE_COMMENT;
+                } else {
+                    
+                    //need to add code for this
+
+                }
+                break;
+
+            //Handle Star - need to add code for this
+
+
+
+
+            //Handle single line - need to add code for this
+            
+
+
+
+            //Handle Multiple Line - need to add code for this
+
+
+
+                
+        }
+  
     }
 
+/*  ************************************************** */
+
+
+
+    }
     inputFile.close(); // Close the file when we are done working.
     return 0;
 }
