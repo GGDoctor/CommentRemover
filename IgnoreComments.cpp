@@ -38,12 +38,6 @@ int main(int argc, char *argv[]) {
     }
 
     string line;
-
-
-/*  ************************************************** */
-
-            /* All code in this area needs work */
-
     State state = ANYTHING;
 
 
@@ -51,7 +45,8 @@ int main(int argc, char *argv[]) {
     while (getline(inputFile, line)) { //looping through each line of the input file
         string result = ""; //String storing the line without comments
 
-        for (char currentChar : line) { //iterate through each character is line string, one character at a time
+        for (size_t i=0; i< line.length(); ++i) { //iterate through each character is line string, one character at a time
+            char currentChar = line[i];
             switch (state) {
 
             //Handle Anything 
@@ -79,7 +74,7 @@ int main(int argc, char *argv[]) {
                 }
                 break;
 
-            //Handle asterick - need to add code for this
+            //Handle asterick 
             case ASTERICK:
                 if (currentChar == '/') {
                     state = SINGLE_LINE_COMMENT; //this is probably not right
@@ -89,9 +84,7 @@ int main(int argc, char *argv[]) {
                 break;
 
 
-
-
-            //Handle single line - need to add code for this
+            //Handle single line 
             case SINGLE_LINE_COMMENT:
                 if (currentChar == '/') {
                     state = SINGLE_LINE_COMMENT;
@@ -99,20 +92,15 @@ int main(int argc, char *argv[]) {
                 break;
 
 
-
-            //Handle Multiple Line - need to add code for this
+            //Handle Multiple Line 
             case MULTI_LINE_COMMENT:
                 if (currentChar == '*') {
                     state = ASTERICK;
                 }
-                break;
-
-                
+                break;                
+            }
         }
-  
-    }
-
-/*  ************************************************** */
+        cout << result << endl;
     }
     inputFile.close(); // Close the file when we are done working.
     return 0;
