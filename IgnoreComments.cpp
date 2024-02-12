@@ -46,47 +46,63 @@ int main(int argc, char *argv[]) {
 
     State state = ANYTHING;
 
+
     //implement the while loop
-    while (getline(inputFile, line)) {
-        string result = "";
+    while (getline(inputFile, line)) { //looping through each line of the input file
+        string result = ""; //String storing the line without comments
 
         for (char currentChar : line) { //iterate through each character is line string, one character at a time
             switch (state) {
 
             //Handle Anything 
             case ANYTHING:
-                if (currentChar == '/') {
-                    state = SLASH;
+                if (currentChar == '/') { //Checking for the beginning of a comment
+                    state = SLASH; //transition to the slash state
                 } else {
-                    result += currentChar;
+                    result += currentChar; //Append character to the result
                 }
                 break;
             
             //Handle Slash
             case SLASH:
-                if (currentChar == '/') {
-                    state = SINGLE_LINE_COMMENT;
-                } else if (currentChar == '*') {
-                    state = MULTI_LINE_COMMENT;
+                if (currentChar == '/') { //check for a single line comment
+                    state = SINGLE_LINE_COMMENT; //transition to a single line comment state
+                } else if (currentChar == '*') { //check for a multiple line comment
+                    state = MULTI_LINE_COMMENT; //transition to a multi line comment state
                 } else {
                     
                     //need to add code for this
+                    result += '/'; //continue onto the next '/'
+                    result += currentChar; //append the current character
 
+                    state = ANYTHING;
                 }
                 break;
 
-            //Handle Star - need to add code for this
+            //Handle asterick - need to add code for this
+            case ASTERICK:
+                if (currentChar == '/') {
+                    state = SINGLE_LINE_COMMENT; //this is probably not right
+                } else if (currentChar != '*') {
+                    state = MULTI_LINE_COMMENT;
+                } 
+                break;
 
 
 
 
             //Handle single line - need to add code for this
-            
+            case SINGLE_LINE_COMMENT:
+                if (currentChar == '/') {
+                    state = SINGLE_LINE_COMMENT;
+                }
+                break;
 
 
 
             //Handle Multiple Line - need to add code for this
-
+            case MULTI_LINE_COMMENT:
+                if (currentChar == '*')
 
 
                 
@@ -95,9 +111,6 @@ int main(int argc, char *argv[]) {
     }
 
 /*  ************************************************** */
-
-
-
     }
     inputFile.close(); // Close the file when we are done working.
     return 0;
