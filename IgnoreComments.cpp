@@ -102,8 +102,10 @@ int main(int argc, char *argv[]) {
 
             //Handle Multiple Line - need to add code for this
             case MULTI_LINE_COMMENT:
-                if (currentChar == '*')
-
+                if (currentChar == '*') {
+                    state = ASTERICK;
+                }
+                break;
 
                 
         }
