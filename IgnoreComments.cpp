@@ -20,7 +20,8 @@ enum State {
     SINGLE_LINE_COMMENT, // A comment pertaining '//'
     MULTI_LINE_COMMENT, // A comment pertaining '/* bla */
     SINGLE_QUOTE,
-    DOUBLE_QUOTE
+    DOUBLE_QUOTE, 
+    Error
 };
 
 
@@ -44,6 +45,8 @@ int main(int argc, char *argv[]) {
 
     State state = ANYTHING;
     string result = "";
+    int line = 1; 
+    int mult_line = 0;
     char currentChar;
 
     while (inputFile.get(currentChar)) {
@@ -62,6 +65,12 @@ int main(int argc, char *argv[]) {
                 } else if (currentChar == '\'') {
                     state = SINGLE_QUOTE;
                     result += currentChar;
+                }else if (currentChar == '\n'){ //Check for new line
+                    result += currentChar;
+                    line += 1; 
+                }else if (currentChar == '*'){  //Check if  */ appears before  /* 
+                    char nextChar = inputFile.peek();
+                    state = (nextChar == '/') ? Error : ANYTHING;
                 } else {
                     result += currentChar;
                 }
@@ -85,6 +94,9 @@ int main(int argc, char *argv[]) {
             case ASTERICK:
                 if (currentChar == '/') {
                     state = ANYTHING;
+                }else if (currentChar == '\n'){
+                    line += 1; 
+                    state = MULTI_LINE_COMMENT;
                 } else if (currentChar != '*') {
                     state = MULTI_LINE_COMMENT;
                 } 
@@ -94,6 +106,7 @@ int main(int argc, char *argv[]) {
             //Handle single line - need to add code for this
             case SINGLE_LINE_COMMENT:
                 if (currentChar == '\n') {
+                    line += 1; //Check for new line
                     state = ANYTHING;
                     result += currentChar;
                 } else {
@@ -107,7 +120,10 @@ int main(int argc, char *argv[]) {
                     state = ASTERICK;
                     result += ' ';
                 } else {
+                    line  += currentChar == '\n' ? 1 : 0 ;  //Did I do this check right? If equal to \n then add 1?
                     result += currentChar == '\n' ? '\n' : ' ';
+                    mult_line += currentChar == '\n' ? 1 : 0 ;
+                    
                 } 
                 break;
 
@@ -126,11 +142,23 @@ int main(int argc, char *argv[]) {
                 } 
                 result += currentChar;
                 break;
+
+            case Error:
+                //cout << "ERROR: Program contains C-style, unterminated comment on line " << line << endl;
+                break;
         }
     }
-        
+    if (state == Error){
+         cout << "ERROR: Program contains C-style, unterminated comment on line " << line << endl;
+ 
+    }else if(state == MULTI_LINE_COMMENT){
+         cout << "ERROR: Program contains C-style, unterminated comment on line " << line - mult_line << endl;
+    }
+    else{
+        cout << result; 
+    }
     inputFile.close(); // Close the file when we are done working.
-    std::cout << result;
+    //std::cout << result;
 
     return 0;
 }
