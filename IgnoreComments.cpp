@@ -39,10 +39,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-/*  ************************************************** */
-
-            /* All code in this area needs work */
-
     State state = ANYTHING;
     string result = "";
     int line = 1; 
@@ -90,7 +86,7 @@ int main(int argc, char *argv[]) {
                 }
                 break;
 
-            //Handle Star - need to add code for this
+            //Handle Star 
             case ASTERICK:
                 if (currentChar == '/') {
                     state = ANYTHING;
@@ -103,7 +99,7 @@ int main(int argc, char *argv[]) {
                 result += ' ';
                 break;
 
-            //Handle single line - need to add code for this
+            //Handle single line 
             case SINGLE_LINE_COMMENT:
                 if (currentChar == '\n') {
                     line += 1; //Check for new line
@@ -114,13 +110,13 @@ int main(int argc, char *argv[]) {
                 }
                 break;
 
-            //Handle Multiple Line - need to add code for this
+            //Handle Multiple Line 
             case MULTI_LINE_COMMENT:
                 if (currentChar == '*') {
                     state = ASTERICK;
                     result += ' ';
                 } else {
-                    line  += currentChar == '\n' ? 1 : 0 ;  //Did I do this check right? If equal to \n then add 1?
+                    line  += currentChar == '\n' ? 1 : 0 ;  
                     result += currentChar == '\n' ? '\n' : ' ';
                     mult_line += currentChar == '\n' ? 1 : 0 ;
                     
