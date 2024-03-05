@@ -21,7 +21,7 @@ enum State {
     MULTI_LINE_COMMENT, // A comment pertaining '/* bla */
     SINGLE_QUOTE,
     DOUBLE_QUOTE, 
-    Error
+    ERROR
 };
 
 
@@ -61,12 +61,13 @@ int main(int argc, char *argv[]) {
                 } else if (currentChar == '\'') {
                     state = SINGLE_QUOTE;
                     result += currentChar;
-                }else if (currentChar == '\n'){ //Check for new line
+                } else if (currentChar == '\n'){ //Check for new line
                     result += currentChar;
                     line += 1; 
-                }else if (currentChar == '*'){  //Check if  */ appears before  /* 
+                } else if (currentChar == '*'){  //Check if  */ appears before  /* 
                     char nextChar = inputFile.peek();
-                    state = (nextChar == '/') ? Error : ANYTHING;
+                    state = (nextChar == '/') ? ERROR : ANYTHING;
+                    result += currentChar;
                 } else {
                     result += currentChar;
                 }
@@ -123,7 +124,6 @@ int main(int argc, char *argv[]) {
                 } 
                 break;
 
-            // needs code to handle escape characters
             case SINGLE_QUOTE: 
                 if (currentChar == '\'') {
                     state = ANYTHING;
@@ -131,7 +131,6 @@ int main(int argc, char *argv[]) {
                 result += currentChar;
                 break;
 
-            // needs code to handle escape characters
             case DOUBLE_QUOTE:
                 if (currentChar == '"') {
                     state = ANYTHING;
@@ -139,22 +138,22 @@ int main(int argc, char *argv[]) {
                 result += currentChar;
                 break;
 
-            case Error:
-                //cout << "ERROR: Program contains C-style, unterminated comment on line " << line << endl;
+            case ERROR:
                 break;
         }
     }
-    if (state == Error){
-         cout << "ERROR: Program contains C-style, unterminated comment on line " << line << endl;
+
+    if (state == ERROR){
+        cout << "ERROR: Program contains C-style, unterminated comment on line " << line << endl;
  
     }else if(state == MULTI_LINE_COMMENT){
-         cout << "ERROR: Program contains C-style, unterminated comment on line " << line - mult_line << endl;
+        cout << "ERROR: Program contains C-style, unterminated comment on line " << line - mult_line << endl;
     }
     else{
         cout << result; 
     }
-    inputFile.close(); // Close the file when we are done working.
-    //std::cout << result;
+
+    inputFile.close(); 
 
     return 0;
 }
